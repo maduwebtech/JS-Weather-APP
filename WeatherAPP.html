@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>WeatherApp</title>
+</head>
+<style type="text/css">
+	body{
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background: #eee;
+	font-family: Arial;
+}
+.weather{
+	background: #fff;
+	padding: 20px;
+	border: 1px solid deepskyblue;
+	border-radius: 5px;
+}
+.weather input,button{
+	background: skyblue;
+	border: none;
+	padding: 10px;
+	border-radius: 5px;
+	font-size: 12pt;
+}
+.error{
+	color: red;
+}
+h1{
+	color: navy;
+}
+</style>
+<body>
+<h1>Weather APP</h1>
+<div class="weather">
+	<div>
+		<h2 id="city"></h2>
+		<span id="wIcon"></span>
+		<p id="tmp"></p>
+		<p id="desc"></p>
+	</div>
+	<div>
+		<input id="search" type="text" placeholder="Search City">
+		<button onclick="weather()">Check Weather</button>
+	</div>
+</div>
+<script type="text/javascript">
+	function weather(){
+		const city=document.querySelector("#city");
+		const tmp=document.querySelector("#tmp");
+		const desc=document.querySelector("#desc");
+		const search=document.querySelector("#search").value;
+		const wIcon=document.querySelector("#wIcon");
+		const url="https://api.openweathermap.org/data/2.5/weather?q="+search+"&APPID=2f86e0e73c4c925a3bcb7ff13a763fff";
+		fetch(url)
+		.then(function(xyz){
+			return xyz.json();
+		})
+		.then(function(result){
+			console.log(result);
+			city.innerText=result.name;
+			tmp.innerText="Temperature: "+Math.floor(result.main.temp-273.15)+"°C";
+			desc.innerText="Description: "+result.weather[0].description;
+			const icon="https://openweathermap.org/img/w/"+result.weather[0].icon+".png";
+				wIcon.innerHTML="<img src='"+icon+"'>";
+		})
+		.catch(function(error){
+			city.innerHTML="<span class='error'>City Not Found</span>";
+			tmp.innerText="";
+			desc.innerText="";
+		})
+	}
+</script>
+</body>
+</html>
